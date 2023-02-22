@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Map Design</title>
+    <title>Map Tile Lab of Seattle</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css" rel="stylesheet">
@@ -22,11 +22,11 @@
 
         /* the style of the layer control menu */
         #menu {
-            background: #fff;
+            background: rgba(255, 255, 255, 0.9);
             position: absolute;
             z-index: 1;
-            top: 10px;
-            right: 10px;
+            top: 250px;
+            left: 50px;
             border-radius: 3px;
             width: 120px;
             border: 1px solid rgba(0, 0, 0, 0.4);
@@ -65,6 +65,32 @@
         #menu a.active:hover {
             background: #3074a4;
         }
+
+        #map-overlay {
+            background: rgba(255, 255, 255, 0.9);
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin-top: 20px;
+            margin-left: 50px;
+            width: 550px;
+            height: 120px;
+            border-radius: 3px;
+            padding: 10px 20px 10px 10px;
+        }
+
+        #title {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 18pt;
+            color: black;
+        }
+
+
+        #subtitle {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 9.5pt;
+            color: black;
+        }
     </style>
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js"></script>
 </head>
@@ -72,66 +98,112 @@
 <body>
     <nav id="menu"></nav>
     <div id='map'></div>
+    <div id="map-overlay">
+        <div id="title">
+            Map Tiles of Seattle
+        </div>
+        <div id="subtitle">
+            I made 4 different maps to display the wildlife corridors that are presnt in Seattle, 
+            as well as urban watersheds. Click and explore the site to view the different layers.
+            Tip: You may want to zoom in and out to find the maps at first. Sources:
+            <a href="https://data-seattlecitygis.opendata.arcgis.com/">Seattle Geodata</a>.
+        </div>
+    </div>
     <script type="text/javascript">
         mapboxgl.accessToken =
-            'pk.eyJ1IjoiamFrb2J6aGFvIiwiYSI6ImNpcms2YWsyMzAwMmtmbG5icTFxZ3ZkdncifQ.P9MBej1xacybKcDN_jehvw';
+            'pk.eyJ1IjoicGhhbW15MjIiLCJhIjoiY2xhZ2JoNmEwMHI2azN1bzFwczlkMTNqdiJ9.T2vpz0gVbuFh7jAZJo67QA';
         let map = new mapboxgl.Map({
             container: 'map', // container ID
             style: 'mapbox://styles/mapbox/dark-v10',
             zoom: 12, // starting zoom
-            center: [-122.2559435, 47.6002614] // starting center
+            center: [-122.26, 47.60] // starting center
         });
 
         map.on('load', () => { //simplifying the function statement: arrow with brackets to define a function
 
-            map.addSource('uw-tiles', {
+            map.addSource('Basemap', {
                 'type': 'raster',
                 'tiles': [
-                    'assets/uw/{z}/{x}/{y}.png'
+                    'assets/Basemap.{z}/{x}/{y}png'
                 ],
                 'tileSize': 256,
-                'attribution': 'Map tiles designed by Bo Zhao</a>'
+                'attribution': 'Map tiles made by Nicole Saho Wentwoth</a>'
             });
 
-            map.addSource('lgbtq-tiles', {
+            map.addSource('Wildlife-Corridor', {
                 'type': 'raster',
                 'tiles': [
-                    'assets/lgbtq/{z}/{x}/{y}.png'
+                    'assets/Wildlife-Corridor/{z}/{x}/{y}.png'
                 ],
                 'tileSize': 256,
-                'attribution': 'Map tiles designed by Bo Zhao'
+                'attribution': 'Map tiles made by Nicole Saho Wentworth'
+            });
+
+            map.addSource('WildlifeCorridorandMonochrome', {
+                'type': 'raster',
+                'tiles': [
+                    'assets/WildlifeCorridorandMonochrome/{z}/{x}/{y}.png'
+                ],
+                'tileSize': 256,
+                'attribution': 'Map tiles are made by Nicole Saho Wentworth'
+            });
+
+            map.addSource('UrbanCreekWastersheds', {
+                'type': 'raster',
+                'tiles': [
+                    'assets/UrbanCreekWastersheds/{z}/{x}/{y}.png'
+                ],
+                'tileSize': 256,
+                'attribution': 'Map tiles are made by Nicole Saho Wentworth'
             });
 
             map.addLayer({
-                'id': 'uw',
+                'id': 'BaseMap',
                 'type': 'raster',
                 'layout': {
                     'visibility': 'none'
                 },
-                'source': 'uw-tiles'
+                'source': 'BaseMap'
             });
 
             map.addLayer({
-                'id': 'lgbtq',
+                'id': 'WildlifeCorridorandMonochrome',
                 'type': 'raster',
                 'layout': {
                     'visibility': 'none'
                 },
-                'source': 'lgbtq-tiles'
+                'source': 'WildlifeCorridorandMonochrome'
             });
 
+            map.addLayer({
+                'id': 'Wildlife-Corridor',
+                'type': 'raster',
+                'layout': {
+                    'visibility': 'none'
+                },
+                'source': 'Wildlife-Corridor'
+            });
+
+            map.addLayer({
+                'id': 'UrbanCreekWastersheds',
+                'type': 'raster',
+                'layout': {
+                    'visibility': 'none'
+                },
+                'source': 'UrbanCreekWastersheds'
+            })
         });
 
 
         // After the last frame rendered before the map enters an "idle" state.
         map.on('idle', () => {
-            // If these two layers were not added to the map, abort
-            if (!map.getLayer('uw') || !map.getLayer('lgbtq')) {
+            // If these four layers were not added to the map, abort
+            if (!map.getLayer('BaseMap') || !map.getLayer('Wildlife-Corridor') || !map.getLayer('WildlifeCorridorandMonochrome') || !map.getLayer('UrbanCreekWastersheds')) {
                 return;
             }
 
             // Enumerate ids of the layers.
-            const toggleableLayerIds = ['uw', 'lgbtq'];
+            const toggleableLayerIds = ['BaseMap', 'Wildlife-Corridor', 'WildlifeCorridorandMonochrome', 'UrbanCreekWastersheds'];
 
             // Set up the corresponding toggle button for each layer.
             for (const id of toggleableLayerIds) {
