@@ -9,9 +9,9 @@ This first tileset map is a monochrome basemap foundation with a dark background
 The second tileset map is a thematic map depicting the wildlife corrisors in Seattle area. 
 
 [Monochrome Corridor](/Monochrome-Corridor.html)
-![Monochrome-Corridor](/img/Monochrome-Corridor.png)  
+![Monochrome Corridor](/img/Corridor and Basemap.png)   
 The third tileset map is a combination of the monochrome basemap and the thematic map of the wildlife corridors in Seattle. 
 
 [UrbanCreek](/UrbanCreek.html)
-![UrbanCreek](/img/UrbanCreek.png) 
+![UrbanCreek](/img/Urban-Creek-Watershed.png) 
 The fourth tileset map is a thematic map of urban creek watersheds in Seattle area. 
